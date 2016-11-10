@@ -1,0 +1,33 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+repositories {
+    maven {
+    	url "http://repo.maven.apache.org/maven2"
+    }
+    maven {
+    	url "http://repo1.maven.apache.org/maven2"
+    }
+}
+
+dependencies {
+    // logging
+    compile 'org.slf4j:slf4j-api:1.7.18'
+    runtime 'org.apache.logging.log4j:log4j-api:2.6.1'
+    runtime 'org.apache.logging.log4j:log4j-core:2.6.1'
+    runtime 'org.apache.logging.log4j:log4j-slf4j-impl:2.6.1'
+    // testing
+    testCompile 'junit:junit:4.12'
+}
+
+version = '0.1'
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Library',
+                   'Implementation-Version': version
+    }
+}
+
+// Launchers
+
