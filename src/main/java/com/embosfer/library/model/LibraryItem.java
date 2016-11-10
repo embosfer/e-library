@@ -16,14 +16,12 @@ public class LibraryItem {
 	private final long bookID;
 	private final LibraryItemType type;
 	private final String title;
-	private boolean loanable;
 
-	public LibraryItem(long uniqueID, long bookID, LibraryItemType type, String title, boolean loanable) {
+	public LibraryItem(long uniqueID, long bookID, LibraryItemType type, String title) {
 		this.uniqueID = uniqueID;
 		this.bookID = bookID;
 		this.type = type;
 		this.title = title;
-		this.loanable = loanable;
 	}
 
 	/**
@@ -58,21 +56,6 @@ public class LibraryItem {
 	// FIXME add hashcode
 	// FIXME add iterable and iterator
 	// FIXME add javadoc
-
-	/**
-	 * @return whether this item is loanable
-	 */
-	public boolean isLoanable() {
-		return loanable;
-	}
-
-	/**
-	 * @param is
-	 *            loanable
-	 */
-	public void setLoanable(boolean loanable) {
-		this.loanable = loanable;
-	}
 
 	@Override
 	public int hashCode() {
@@ -109,8 +92,7 @@ public class LibraryItem {
 	@Override
 	public String toString() {
 		return new StringBuilder("UniqueID: ").append(uniqueID).append(SEP).append("BookID: ").append(bookID)
-				.append(SEP).append("Type: ").append(type).append(SEP).append("Title: ").append(title).append(SEP)
-				.append("Loanable? ").append(loanable).toString();
+				.append(SEP).append("Type: ").append(type).append(SEP).append("Title: ").append(title).toString();
 	}
 
 }

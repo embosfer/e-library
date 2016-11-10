@@ -26,6 +26,7 @@ import com.embosfer.library.model.User;
 public class CSVLibraryItemSupplier implements LibraryItemSupplier {
 
 	// TODO maybe rename to inventorySupplier
+	// https://commons.apache.org/proper/commons-csv/user-guide.html#Example:_Parsing_an_Excel_CSV_File
 	private static final String COMMA = ",";
 	
 	private final ConcurrentMap<Long, LibraryItem> itemsByUniqueID = new ConcurrentHashMap<>();
@@ -46,7 +47,7 @@ public class CSVLibraryItemSupplier implements LibraryItemSupplier {
 				Long bookID = Long.valueOf(fields[i++]);
 				LibraryItemType type = LibraryItemType.valueOf(fields[i++]);
 				String title = fields[i++];
-				LibraryItem item = new LibraryItem(uniqueID, bookID, type, title, true);
+				LibraryItem item = new LibraryItem(uniqueID, bookID, type, title);
 				
 				// populate caches
 				addNewItem(item);
