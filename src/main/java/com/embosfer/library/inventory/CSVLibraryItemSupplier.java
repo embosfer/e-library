@@ -1,4 +1,4 @@
-package com.embosfer.library;
+package com.embosfer.library.inventory;
 
 import static java.util.stream.Collectors.toList;
 
@@ -16,6 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import com.embosfer.library.LibraryItemSupplier;
 import com.embosfer.library.model.LibraryItem;
 import com.embosfer.library.model.LibraryItem.LibraryItemType;
 import com.embosfer.library.model.User;
