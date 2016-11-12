@@ -1,5 +1,8 @@
 package com.embosfer.library;
 
+import com.embosfer.library.model.LibraryItem;
+import com.embosfer.library.model.User;
+
 /**
  * Provides an API that allows the user to take actions against the library and
  * potentially change the state of it
@@ -10,17 +13,23 @@ package com.embosfer.library;
 public interface LibraryController {
 
 	/**
-	 * @param uniqueID
-	 *            of the item to be borrowed
+	 * @param item
+	 *            to be borrowed
+	 * @param user
+	 *            interested in borrowing
+	 * @param days
+	 *            number of days
 	 * @return whether the item was borrowed successfully
 	 */
-	public boolean borrowBy(long uniqueID);
+	public boolean borrow(LibraryItem item, User user, int days);
 
 	/**
-	 * @param uniqueID
-	 *            of the item to be returned
+	 * @param item
+	 *            to be returned
+	 * @param user
+	 *            returning the item
 	 * @return whether the item was returned successfully
 	 */
-	public boolean returnBy(long uniqueID);
+	public boolean returnItem(LibraryItem item, User user);
 
 }
