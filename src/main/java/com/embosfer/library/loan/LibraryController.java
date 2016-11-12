@@ -1,4 +1,4 @@
-package com.embosfer.library;
+package com.embosfer.library.loan;
 
 import com.embosfer.library.model.LibraryItem;
 import com.embosfer.library.model.User;
