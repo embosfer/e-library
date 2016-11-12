@@ -1,5 +1,6 @@
 package com.embosfer.library.test;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -10,6 +11,8 @@ import org.junit.runners.JUnit4;
 import com.embosfer.library.CSVLibraryItemSupplier;
 import com.embosfer.library.LibraryItemSupplier;
 
+import org.junit.Assert;
+
 /**
  * @author embosfer
  *
@@ -17,17 +20,13 @@ import com.embosfer.library.LibraryItemSupplier;
 @RunWith(JUnit4.class)
 public class CSVLibraryItemSupplierTest {
 
-	private static final String INVENTORY_TEST_CSV = "inventory_test.csv";
+	private static final String INITIAL_INVENTORY_CSV = "src/main/resources/initial_inventory.csv";
+	private static final String INVENTORY_TEST_CSV = "build/tmp/initial_inventory.csv";
 	private static final String csvHeader = "UniqueID,BookID,Type,Title";
 
 	@Test(expected = NullPointerException.class)
-	public void testNullCSVFile() {
+	public void nullCSVFile() {
 		new CSVLibraryItemSupplier(null);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testNonExistentCSVFile() {
-		new CSVLibraryItemSupplier("foo.txt");
 	}
 
 	private void createCSVFile() {
@@ -38,11 +37,13 @@ public class CSVLibraryItemSupplierTest {
 		}
 	}
 
-	// TODO think about path issues
 	@Test
-	public void testCSVFile() {
-		createCSVFile();
-		LibraryItemSupplier csvLibraryItemSupplier = new CSVLibraryItemSupplier(INVENTORY_TEST_CSV);
-
+	public void initialCSVFileSize() {
+		File csv = new File(INITIAL_INVENTORY_CSV);
+		if (!csv.isFile()) {
+			throw new IllegalArgumentException();
+		}
+		LibraryItemSupplier csvLibraryItemSupplier = new CSVLibraryItemSupplier(csv);
+		Assert.assertEquals(12, csvLibraryItemSupplier.getCurrentInventory().size());
 	}
 }
