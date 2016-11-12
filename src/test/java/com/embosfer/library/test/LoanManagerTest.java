@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.embosfer.library.LoanManager;
+import com.embosfer.library.loan.LoanManager;
 import com.embosfer.library.model.LibraryItem;
 import com.embosfer.library.model.LibraryItem.LibraryItemType;
 import com.embosfer.library.model.User;

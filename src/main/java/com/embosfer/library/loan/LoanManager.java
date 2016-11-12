@@ -1,4 +1,4 @@
-package com.embosfer.library;
+package com.embosfer.library.loan;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -8,6 +8,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.embosfer.library.LibraryController;
 import com.embosfer.library.model.LibraryItem;
 import com.embosfer.library.model.Loan;
 import com.embosfer.library.model.User;
