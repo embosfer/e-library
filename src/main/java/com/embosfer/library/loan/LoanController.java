@@ -4,13 +4,12 @@ import com.embosfer.library.model.LibraryItem;
 import com.embosfer.library.model.User;
 
 /**
- * Provides an API that allows the user to take actions against the library and
- * potentially change the state of it
+ * Provides an API that allows the user to loan out or return items
  * 
  * @author embosfer
  *
  */
-public interface LibraryController {
+public interface LoanController {
 
 	/**
 	 * @param item

@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.embosfer.library.loan.LibraryController;
+import com.embosfer.library.loan.LoanController;
 
 /**
  * @author embosfer
@@ -15,7 +15,7 @@ public class LibraryControllerTest {
 
 	@Test
 	public void test() {
-		LibraryController controller;
+		LoanController controller;
 		
 	}
 }

@@ -13,7 +13,7 @@ import com.embosfer.library.model.Loan;
 import com.embosfer.library.model.User;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
-public class LoanManager implements LibraryController {
+public class LoanManager implements LoanController {
 
 	// TODO: tune it to size
 	private final ConcurrentMap<Long, LibraryItem> loanedItems = new ConcurrentHashMap<>();
