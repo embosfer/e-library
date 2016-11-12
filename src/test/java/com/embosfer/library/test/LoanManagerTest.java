@@ -21,7 +21,7 @@ public class LoanManagerTest {
 	public void testLoanNullBook() {
 		LoanManager loanManager = new LoanManager();
 
-		loanManager.loan(null, new User(), 7);
+		loanManager.borrow(null, new User(1, "Bob"), 7);
 	}
 
 	@Test(expected = NullPointerException.class)
@@ -29,7 +29,7 @@ public class LoanManagerTest {
 		LoanManager loanManager = new LoanManager();
 
 		LibraryItem item = new LibraryItem(1, 1, LibraryItemType.Book, "");
-		loanManager.loan(item, null, 7);
+		loanManager.borrow(item, null, 7);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -37,7 +37,7 @@ public class LoanManagerTest {
 		LoanManager loanManager = new LoanManager();
 
 		LibraryItem item = new LibraryItem(1, 1, LibraryItemType.Book, "");
-		loanManager.loan(item, new User(), 0);
+		loanManager.borrow(item, new User(1, "Bob"), 0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -45,7 +45,7 @@ public class LoanManagerTest {
 		LoanManager loanManager = new LoanManager();
 
 		LibraryItem item = new LibraryItem(1, 1, LibraryItemType.Book, "");
-		loanManager.loan(item, new User(), -1);
+		loanManager.borrow(item, new User(1, "Bob"), -1);
 	}
 
 	@Test
@@ -53,7 +53,7 @@ public class LoanManagerTest {
 		LoanManager loanManager = new LoanManager();
 
 		LibraryItem item = new LibraryItem(1, 1, LibraryItemType.Book, "");
-		boolean loaned = loanManager.loan(item, new User(), 1);
+		boolean loaned = loanManager.borrow(item, new User(1, "Bob"), 1);
 		Assert.assertTrue(loaned);
 	}
 
@@ -62,15 +62,16 @@ public class LoanManagerTest {
 		LoanManager loanManager = new LoanManager();
 
 		LibraryItem item = new LibraryItem(1, 1, LibraryItemType.Book, "");
-		boolean loaned = loanManager.loan(item, new User(), 1);
+		User bob = new User(1, "Bob");
+		boolean loaned = loanManager.borrow(item, bob, 1);
 		Assert.assertTrue(loaned);
 
 		// try to loan it again with same user
-		loaned = loanManager.loan(item, new User(), 1);
+		loaned = loanManager.borrow(item, bob, 1);
 		Assert.assertFalse(loaned);
 
 		// try to loan it again with different user
-		loaned = loanManager.loan(item, new User(), 1);
+		loaned = loanManager.borrow(item, new User(2, "Alice"), 1);
 		Assert.assertFalse(loaned);
 	}
 
@@ -89,7 +90,8 @@ public class LoanManagerTest {
 				startGate.await();
 			} catch (InterruptedException ignored) {
 			}
-			boolean loaned = loanManager.loan(itemToLoan, new User(), 1);
+			// FIXME different users
+			boolean loaned = loanManager.borrow(itemToLoan, new User(1, "Bob"), 1);
 			if (loaned)
 				numTimesLoaned.incrementAndGet();
 			endGate.countDown(); // wait for all threads to be ready
@@ -100,7 +102,7 @@ public class LoanManagerTest {
 			loaner.start();
 		});
 
-		startGate.countDown();
+		startGate.countDown(); // release all threads
 		endGate.await(); // wait for all threads to finish
 		Assert.assertEquals(1, numTimesLoaned.get());
 	}
