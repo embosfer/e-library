@@ -22,7 +22,7 @@ public class CSVLibraryItemSupplierTest {
 
 	private static final String INITIAL_INVENTORY_CSV = "src/main/resources/initial_inventory.csv";
 	private static final String INVENTORY_TEST_CSV = "build/tmp/initial_inventory.csv";
-	private static final String csvHeader = "UniqueID,BookID,Type,Title";
+	private static final String csvHeader = "UID,ItemID,Type,Title";
 
 	@Test(expected = NullPointerException.class)
 	public void nullCSVFile() {
