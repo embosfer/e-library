@@ -34,7 +34,13 @@ public class CSVLibraryItemSupplier implements LibraryItemSupplier {
 	private final ConcurrentMap<Long, LibraryItem> itemsByUniqueID = new ConcurrentHashMap<>();
 	private final List<LibraryItem> inventoryList;
 
-	public CSVLibraryItemSupplier(File csvFile) {
+	/**
+	 * @param csvFile
+	 *            The CSV {@link File}
+	 * @throws IOException
+	 *             If an {@link IOException} occurs
+	 */
+	public CSVLibraryItemSupplier(File csvFile) throws IOException {
 		Objects.requireNonNull(csvFile, "CSV File must not be null");
 
 		try (Stream<String> stream = Files.lines(Paths.get(csvFile.toURI()))) {
@@ -42,9 +48,6 @@ public class CSVLibraryItemSupplier implements LibraryItemSupplier {
 			List<LibraryItem> libraryItems = stream.skip(1).map(toLibraryItem).collect(toList());
 			inventoryList = new CopyOnWriteArrayList<>(libraryItems);
 
-		} catch (IOException e) {
-			throw new AssertionError(e); // TODO review: maybe create a custom
-											// exception
 		}
 	}
 
@@ -53,7 +56,8 @@ public class CSVLibraryItemSupplier implements LibraryItemSupplier {
 		int i = 0;
 		LibraryItem libraryItem = new LibraryItem(Long.valueOf(fields[i++]), Long.valueOf(fields[i++]),
 				LibraryItemType.valueOf(fields[i++]), fields[i++]);
-		itemsByUniqueID.put(libraryItem.getBookID(), libraryItem);
+		LibraryItem replaced = itemsByUniqueID.put(libraryItem.getUniqueID(), libraryItem);
+		assert (replaced == null) : "Duplicate found while loading => " + libraryItem;
 		return libraryItem;
 	};
 

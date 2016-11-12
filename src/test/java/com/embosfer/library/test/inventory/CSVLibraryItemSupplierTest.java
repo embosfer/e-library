@@ -1,17 +1,15 @@
 package com.embosfer.library.test.inventory;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.embosfer.library.inventory.CSVLibraryItemSupplier;
 import com.embosfer.library.inventory.LibraryItemSupplier;
-
-import org.junit.Assert;
 
 /**
  * @author embosfer
@@ -20,30 +18,21 @@ import org.junit.Assert;
 @RunWith(JUnit4.class)
 public class CSVLibraryItemSupplierTest {
 
-	private static final String INITIAL_INVENTORY_CSV = "src/main/resources/initial_inventory.csv";
-	private static final String INVENTORY_TEST_CSV = "build/tmp/initial_inventory.csv";
-	private static final String csvHeader = "UID,ItemID,Type,Title";
-
 	@Test(expected = NullPointerException.class)
-	public void nullCSVFile() {
+	public void nullCSVFile() throws IOException {
 		new CSVLibraryItemSupplier(null);
 	}
 
-	private void createCSVFile() {
-		try (FileWriter fileWriter = new FileWriter(INVENTORY_TEST_CSV)) {
-			fileWriter.write(csvHeader);
-		} catch (IOException e) {
-			throw new AssertionError(e);
-		}
-	}
-
 	@Test
-	public void initialCSVFileSize() {
-		File csv = new File(INITIAL_INVENTORY_CSV);
-		if (!csv.isFile()) {
-			throw new IllegalArgumentException();
-		}
+	public void initialCSVFileSize() throws IOException {
+		File csv = new File("src/main/resources/initial_inventory.csv");
 		LibraryItemSupplier csvLibraryItemSupplier = new CSVLibraryItemSupplier(csv);
 		Assert.assertEquals(12, csvLibraryItemSupplier.getCurrentInventory().size());
+	}
+
+	@Test(expected = AssertionError.class)
+	public void disallowUIDDuplicates() throws IOException {
+		File csv = new File("src/test/resources/duplicate_uid_inventory.csv");
+		new CSVLibraryItemSupplier(csv);
 	}
 }
