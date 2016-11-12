@@ -8,8 +8,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.embosfer.library.LibraryItemSupplier;
 import com.embosfer.library.inventory.CSVLibraryItemSupplier;
+import com.embosfer.library.inventory.LibraryItemSupplier;
 
 import org.junit.Assert;
 

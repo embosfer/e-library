@@ -1,4 +1,4 @@
-package com.embosfer.library;
+package com.embosfer.library.inventory;
 
 import java.util.Collection;
 
