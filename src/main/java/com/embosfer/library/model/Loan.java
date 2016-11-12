@@ -1,6 +1,7 @@
 package com.embosfer.library.model;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * Structure holding the information of a loan made by a {@link User}
@@ -16,12 +17,23 @@ public class Loan {
 	private final LocalDateTime loanStart;
 	private final LocalDateTime loanEnd;
 
+	/**
+	 * @param user
+	 *            The {@link User}. Must not be null
+	 * @param uniqueLibraryItemID
+	 * @param loanStart
+	 * @param loanEnd
+	 */
 	public Loan(User user, long uniqueLibraryItemID, LocalDateTime loanStart, LocalDateTime loanEnd) {
+		Objects.requireNonNull(user);
 		this.user = user;
 		this.uniqueLibraryItemID = uniqueLibraryItemID;
 		this.loanStart = loanStart;
 		this.loanEnd = loanEnd;
 	}
+
+	// TODO complete javadoc
+	// TODO provide equals and hashCode methods
 
 	@Override
 	public String toString() {
