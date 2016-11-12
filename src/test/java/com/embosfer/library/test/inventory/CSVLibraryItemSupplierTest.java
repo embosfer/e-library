@@ -1,4 +1,4 @@
-package com.embosfer.library.test;
+package com.embosfer.library.test.inventory;
 
 import java.io.File;
 import java.io.FileWriter;

@@ -1,4 +1,4 @@
-package com.embosfer.library.test;
+package com.embosfer.library.test.loan;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
