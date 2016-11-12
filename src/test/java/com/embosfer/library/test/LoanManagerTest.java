@@ -18,14 +18,14 @@ import com.embosfer.library.model.User;
 public class LoanManagerTest {
 
 	@Test(expected = NullPointerException.class)
-	public void testLoanNullBook() {
+	public void borrowNullBook() {
 		LoanManager loanManager = new LoanManager();
 
 		loanManager.borrow(null, new User(1, "Bob"), 7);
 	}
 
 	@Test(expected = NullPointerException.class)
-	public void testLoanNullUser() {
+	public void borrowNullUser() {
 		LoanManager loanManager = new LoanManager();
 
 		LibraryItem item = new LibraryItem(1, 1, LibraryItemType.Book, "");
@@ -33,7 +33,7 @@ public class LoanManagerTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testLoanInvalidDays() {
+	public void borrowInvalidDays() {
 		LoanManager loanManager = new LoanManager();
 
 		LibraryItem item = new LibraryItem(1, 1, LibraryItemType.Book, "");
@@ -41,7 +41,7 @@ public class LoanManagerTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testLoanInvalidDays_2() {
+	public void borrowInvalidDays_2() {
 		LoanManager loanManager = new LoanManager();
 
 		LibraryItem item = new LibraryItem(1, 1, LibraryItemType.Book, "");
@@ -49,7 +49,7 @@ public class LoanManagerTest {
 	}
 
 	@Test
-	public void testLoanSingleThreaded_LoanSuccess() {
+	public void borrowSingleThreaded_BorrowSuccess() {
 		LoanManager loanManager = new LoanManager();
 
 		LibraryItem item = new LibraryItem(1, 1, LibraryItemType.Book, "");
@@ -58,7 +58,7 @@ public class LoanManagerTest {
 	}
 
 	@Test
-	public void testLoanSingleThreaded_LoanFail() {
+	public void borrowSingleThreaded_BorrowFail() {
 		LoanManager loanManager = new LoanManager();
 
 		LibraryItem item = new LibraryItem(1, 1, LibraryItemType.Book, "");
@@ -76,7 +76,7 @@ public class LoanManagerTest {
 	}
 
 	@Test
-	public void testLoanMultiThreaded_JustOneSuccess() throws InterruptedException {
+	public void borrowMultiThreaded_JustOneUserSucceds() throws InterruptedException {
 		LoanManager loanManager = new LoanManager();
 		LibraryItem itemToLoan = new LibraryItem(1, 1, LibraryItemType.Book, "");
 
