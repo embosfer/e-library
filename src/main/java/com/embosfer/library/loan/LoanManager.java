@@ -2,8 +2,6 @@ package com.embosfer.library.loan;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -17,7 +15,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 public class LoanManager implements LoanController {
 
 	// TODO: tune it to size
-	private final BorrowedItemsCache activeLoansCache;
+	private final BorrowedItemsCache borrowedItemsCache;
 	private final LoanTransactionStore loanStore;
 	private final ScheduledExecutorService overdueItemsNotifier = Executors.newSingleThreadScheduledExecutor(
 			new ThreadFactoryBuilder().setDaemon(true).setNameFormat("overdueNotifier-%d").build());
@@ -25,7 +23,7 @@ public class LoanManager implements LoanController {
 	public LoanManager(BorrowedItemsCache borrowedItemsCache, LoanTransactionStore loanStore) {
 		Objects.requireNonNull(borrowedItemsCache, "BorrowedItemsCache cannot be null");
 		Objects.requireNonNull(loanStore, "LoanTransactionStore cannot be null");
-		this.activeLoansCache = borrowedItemsCache;
+		this.borrowedItemsCache = borrowedItemsCache;
 		this.loanStore = loanStore;
 	}
 
@@ -42,7 +40,7 @@ public class LoanManager implements LoanController {
 		if (days < 1)
 			throw new IllegalArgumentException("days must be > 0");
 
-		if (activeLoansCache.tryToAdd(item)) {
+		if (borrowedItemsCache.tryToAdd(item, user)) {
 			// borrowing successful
 			LocalDateTime now = LocalDateTime.now();
 			Loan newLoan = new Loan(user, item.getUniqueID(), now, now.plusDays(days));
@@ -58,7 +56,7 @@ public class LoanManager implements LoanController {
 	@Override
 	public void returnItem(LibraryItemCopy item, User user) {
 		check(item, user);
-		activeLoansCache.remove(item);
+		borrowedItemsCache.remove(item, user);
 		// TODO find Loan by item and user and pass it as param below
 		loanStore.end(null);
 	}
