@@ -27,8 +27,7 @@ public interface LoanController {
 	 *            to be returned
 	 * @param user
 	 *            returning the item
-	 * @return whether the item was returned successfully
 	 */
-	public boolean returnItem(LibraryItemCopy item, User user);
+	public void returnItem(LibraryItemCopy item, User user);
 
 }

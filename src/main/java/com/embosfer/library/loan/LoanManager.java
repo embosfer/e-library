@@ -17,13 +17,15 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 public class LoanManager implements LoanController {
 
 	// TODO: tune it to size
+	private final BorrowedItemsCache activeLoansCache;
 	private final LoanTransactionStore loanStore;
-	private final ConcurrentMap<Long, LibraryItemCopy> loanedItems = new ConcurrentHashMap<>();
 	private final ScheduledExecutorService overdueItemsNotifier = Executors.newSingleThreadScheduledExecutor(
 			new ThreadFactoryBuilder().setDaemon(true).setNameFormat("overdueNotifier-%d").build());
 
-	public LoanManager(LoanTransactionStore loanStore) {
+	public LoanManager(BorrowedItemsCache borrowedItemsCache, LoanTransactionStore loanStore) {
+		Objects.requireNonNull(borrowedItemsCache, "BorrowedItemsCache cannot be null");
 		Objects.requireNonNull(loanStore, "LoanTransactionStore cannot be null");
+		this.activeLoansCache = borrowedItemsCache;
 		this.loanStore = loanStore;
 	}
 
@@ -40,13 +42,12 @@ public class LoanManager implements LoanController {
 		if (days < 1)
 			throw new IllegalArgumentException("days must be > 0");
 
-		LibraryItemCopy itemToLoan = loanedItems.putIfAbsent(item.getUniqueID(), item);
-		if (itemToLoan == null) {
+		if (activeLoansCache.tryToAdd(item)) {
 			// borrowing successful
 			LocalDateTime now = LocalDateTime.now();
 			Loan newLoan = new Loan(user, item.getUniqueID(), now, now.plusDays(days));
 			loanStore.store(newLoan);
-			overdueItemsNotifier.schedule(() -> System.err.println("Item " + itemToLoan + " is overdue!"), days,
+			overdueItemsNotifier.schedule(() -> System.err.println("Item " + item + " is overdue!"), days,
 					TimeUnit.DAYS);
 			return true;
 		} else {
@@ -55,14 +56,11 @@ public class LoanManager implements LoanController {
 	}
 
 	@Override
-	public boolean returnItem(LibraryItemCopy item, User user) {
+	public void returnItem(LibraryItemCopy item, User user) {
 		check(item, user);
-		LibraryItemCopy itemReturned = loanedItems.remove(item.getUniqueID());
-		if (itemReturned != null) {
-			// TODO
-			return true;
-		}
-		return false;
+		activeLoansCache.remove(item);
+		// TODO find Loan by item and user and pass it as param below
+		loanStore.end(null);
 	}
 
 	private void check(LibraryItemCopy item, User user) {

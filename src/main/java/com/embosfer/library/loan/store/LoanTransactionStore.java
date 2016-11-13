@@ -10,5 +10,15 @@ import com.embosfer.library.model.Loan;
  */
 public interface LoanTransactionStore {
 
+	/**
+	 * @param loan
+	 *            The {@link Loan} to store
+	 */
 	public void store(Loan loan);
+
+	/**
+	 * @param loan
+	 *            The {@link Loan} to mark as ended
+	 */
+	public void end(Loan loan);
 }

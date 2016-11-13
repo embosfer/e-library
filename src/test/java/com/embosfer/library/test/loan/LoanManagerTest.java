@@ -5,17 +5,20 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import com.embosfer.library.loan.BorrowedItemsCache;
 import com.embosfer.library.loan.LoanManager;
 import com.embosfer.library.loan.store.LoanTransactionStore;
 import com.embosfer.library.model.LibraryItem;
 import com.embosfer.library.model.LibraryItem.LibraryItemType;
 import com.embosfer.library.model.LibraryItemCopy;
+import com.embosfer.library.model.Loan;
 import com.embosfer.library.model.User;
 
 @RunWith(JUnit4.class)
@@ -23,17 +26,42 @@ public class LoanManagerTest {
 
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
+	private LoanTransactionStore dummyLoanTS;
+
+	private class DummyLoanTS implements LoanTransactionStore {
+
+		@Override
+		public void store(Loan loan) {
+		}
+
+		@Override
+		public void end(Loan loan) {
+		}
+
+	}
+	
+	@Before
+	public void initialise() {
+		dummyLoanTS = new DummyLoanTS();
+	}
+
+	@Test
+	public void nullBorrowedItemsCache() {
+		thrown.expect(NullPointerException.class);
+		thrown.expectMessage("BorrowedItemsCache cannot be null");
+		new LoanManager(null, null);
+	}
 
 	@Test
 	public void nullLoanTransactionStore() {
 		thrown.expect(NullPointerException.class);
 		thrown.expectMessage("LoanTransactionStore cannot be null");
-		new LoanManager(null);
+		new LoanManager(new BorrowedItemsCache(), null);
 	}
 
 	@Test
 	public void borrowNullBook() {
-		LoanManager loanManager = new LoanManager(dummyLoanTransactionalStore);
+		LoanManager loanManager = new LoanManager(new BorrowedItemsCache(), dummyLoanTS);
 
 		thrown.expect(NullPointerException.class);
 		thrown.expectMessage("LibraryItemCopy cannot be null");
@@ -42,7 +70,7 @@ public class LoanManagerTest {
 
 	@Test
 	public void borrowNullUser() {
-		LoanManager loanManager = new LoanManager(dummyLoanTransactionalStore);
+		LoanManager loanManager = new LoanManager(new BorrowedItemsCache(), dummyLoanTS);
 
 		LibraryItem item = new LibraryItem(1, LibraryItemType.Book, "Java Concurrency In Practice");
 		LibraryItemCopy uniqueCopy = new LibraryItemCopy(1, item);
@@ -54,7 +82,7 @@ public class LoanManagerTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void borrowInvalidDays() {
-		LoanManager loanManager = new LoanManager(dummyLoanTransactionalStore);
+		LoanManager loanManager = new LoanManager(new BorrowedItemsCache(), dummyLoanTS);
 
 		LibraryItem item = new LibraryItem(1, LibraryItemType.Book, "Java Concurrency In Practice");
 		LibraryItemCopy uniqueCopy = new LibraryItemCopy(1, item);
@@ -63,7 +91,7 @@ public class LoanManagerTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void borrowInvalidDays_2() {
-		LoanManager loanManager = new LoanManager(dummyLoanTransactionalStore);
+		LoanManager loanManager = new LoanManager(new BorrowedItemsCache(), dummyLoanTS);
 
 		LibraryItem item = new LibraryItem(1, LibraryItemType.Book, "Java Concurrency In Practice");
 		LibraryItemCopy uniqueCopy = new LibraryItemCopy(1, item);
@@ -72,7 +100,7 @@ public class LoanManagerTest {
 
 	@Test
 	public void borrowSingleThreaded_BorrowSuccess() {
-		LoanManager loanManager = new LoanManager(dummyLoanTransactionalStore);
+		LoanManager loanManager = new LoanManager(new BorrowedItemsCache(), dummyLoanTS);
 
 		LibraryItem item = new LibraryItem(1, LibraryItemType.Book, "Java Concurrency In Practice");
 		LibraryItemCopy uniqueCopy = new LibraryItemCopy(1, item);
@@ -82,7 +110,7 @@ public class LoanManagerTest {
 
 	@Test
 	public void borrowSingleThreaded_BorrowFail() {
-		LoanManager loanManager = new LoanManager(dummyLoanTransactionalStore);
+		LoanManager loanManager = new LoanManager(new BorrowedItemsCache(), dummyLoanTS);
 
 		LibraryItem item = new LibraryItem(1, LibraryItemType.Book, "Java Concurrency In Practice");
 		LibraryItemCopy uniqueCopy = new LibraryItemCopy(1, item);
@@ -101,7 +129,7 @@ public class LoanManagerTest {
 
 	@Test
 	public void borrowMultiThreaded_JustOneUserSucceds() throws InterruptedException {
-		LoanManager loanManager = new LoanManager(dummyLoanTransactionalStore);
+		LoanManager loanManager = new LoanManager(new BorrowedItemsCache(), dummyLoanTS);
 		LibraryItem itemToLoan = new LibraryItem(1, LibraryItemType.Book, "Java Concurrency In Practice");
 		LibraryItemCopy uniqueCopy = new LibraryItemCopy(1, itemToLoan);
 
@@ -132,5 +160,4 @@ public class LoanManagerTest {
 		Assert.assertEquals(1, numTimesLoaned.get());
 	}
 
-	private LoanTransactionStore dummyLoanTransactionalStore = System.out::println;
 }

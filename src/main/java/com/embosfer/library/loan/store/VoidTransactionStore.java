@@ -9,4 +9,9 @@ public class VoidTransactionStore implements LoanTransactionStore {
 		System.out.println("Successfully stored " + loan);
 	}
 
+	@Override
+	public void end(Loan loan) {
+		System.out.println("Successfully marked as ended " + loan);
+	}
+
 }
