@@ -18,6 +18,8 @@ public class LibraryItemCopy {
 	/**
 	 * @param uniqueID
 	 *            The item's unique ID.
+	 * @param item
+	 *            The shared details of this copy
 	 */
 	public LibraryItemCopy(long uniqueID, LibraryItem item) {
 		Objects.requireNonNull(item);
@@ -32,6 +34,9 @@ public class LibraryItemCopy {
 		return uniqueID;
 	}
 
+	/**
+	 * @return The shared details of this copy
+	 */
 	public LibraryItem getItem() {
 		return item;
 	}
