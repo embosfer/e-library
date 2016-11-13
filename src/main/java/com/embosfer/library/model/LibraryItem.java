@@ -70,8 +70,8 @@ public class LibraryItem {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (int) (itemID ^ (itemID >>> 32));
-		result = prime * result + ((title == null) ? 0 : title.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + title.hashCode();
+		result = prime * result + type.hashCode();
 		return result;
 	}
 
