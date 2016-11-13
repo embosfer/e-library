@@ -34,7 +34,6 @@ public class LoanManager implements LoanController {
 		overdueItemsNotifier.shutdown();
 	}
 
-	// FIXME need the user dimension
 	@Override
 	public boolean borrow(LibraryItemCopy item, User user, int days) {
 		check(item, user);
@@ -44,7 +43,6 @@ public class LoanManager implements LoanController {
 		LibraryItemCopy itemToLoan = loanedItems.putIfAbsent(item.getUniqueID(), item);
 		if (itemToLoan == null) {
 			// borrowing successful
-			// TODO create transaction
 			LocalDateTime now = LocalDateTime.now();
 			Loan newLoan = new Loan(user, item.getUniqueID(), now, now.plusDays(days));
 			loanStore.store(newLoan);
