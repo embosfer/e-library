@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.embosfer.library.model.LibraryItem;
+import com.embosfer.library.model.LibraryItemCopy;
 import com.embosfer.library.model.Loan;
 import com.embosfer.library.model.User;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -16,7 +16,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 public class LoanManager implements LoanController {
 
 	// TODO: tune it to size
-	private final ConcurrentMap<Long, LibraryItem> loanedItems = new ConcurrentHashMap<>();
+	private final ConcurrentMap<Long, LibraryItemCopy> loanedItems = new ConcurrentHashMap<>();
 	private final ScheduledExecutorService overdueItemsNotifier = Executors.newSingleThreadScheduledExecutor(
 			new ThreadFactoryBuilder().setDaemon(true).setNameFormat("overdueNotifier-%d").build());
 
@@ -33,12 +33,12 @@ public class LoanManager implements LoanController {
 
 	// FIXME need the user dimension
 	@Override
-	public boolean borrow(LibraryItem item, User user, int days) {
+	public boolean borrow(LibraryItemCopy item, User user, int days) {
 		check(item, user);
 		if (days < 1)
 			throw new IllegalArgumentException("days must be > 0");
 
-		LibraryItem itemToLoan = loanedItems.putIfAbsent(item.getUniqueID(), item);
+		LibraryItemCopy itemToLoan = loanedItems.putIfAbsent(item.getUniqueID(), item);
 		if (itemToLoan == null) {
 			// borrowing successful
 			// TODO create transaction
@@ -53,18 +53,18 @@ public class LoanManager implements LoanController {
 	}
 
 	@Override
-	public boolean returnItem(LibraryItem item, User user) {
+	public boolean returnItem(LibraryItemCopy item, User user) {
 		check(item, user);
-		LibraryItem itemReturned = loanedItems.remove(item.getUniqueID());
+		LibraryItemCopy itemReturned = loanedItems.remove(item.getUniqueID());
 		if (itemReturned != null) {
-			//TODO
+			// TODO
 			return true;
 		}
 		return false;
 	}
 
-	private void check(LibraryItem item, User user) {
-		Objects.requireNonNull(item, "LibraryItem cannot be null");
+	private void check(LibraryItemCopy item, User user) {
+		Objects.requireNonNull(item, "LibraryItemCopy cannot be null");
 		Objects.requireNonNull(user, "User cannot be null");
 	}
 }

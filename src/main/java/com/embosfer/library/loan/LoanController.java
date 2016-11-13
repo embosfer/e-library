@@ -1,6 +1,6 @@
 package com.embosfer.library.loan;
 
-import com.embosfer.library.model.LibraryItem;
+import com.embosfer.library.model.LibraryItemCopy;
 import com.embosfer.library.model.User;
 
 /**
@@ -15,12 +15,12 @@ public interface LoanController {
 	 * @param item
 	 *            to be borrowed
 	 * @param user
-	 *            interested in borrowing
+	 *            wanting to borrow
 	 * @param days
 	 *            number of days
 	 * @return whether the item was borrowed successfully
 	 */
-	public boolean borrow(LibraryItem item, User user, int days);
+	public boolean borrow(LibraryItemCopy item, User user, int days);
 
 	/**
 	 * @param item
@@ -29,6 +29,6 @@ public interface LoanController {
 	 *            returning the item
 	 * @return whether the item was returned successfully
 	 */
-	public boolean returnItem(LibraryItem item, User user);
+	public boolean returnItem(LibraryItemCopy item, User user);
 
 }

@@ -33,6 +33,7 @@ public class CSVLibraryItemSupplierTest {
 	@Test(expected = AssertionError.class)
 	public void disallowUIDDuplicates() throws IOException {
 		File csv = new File("src/test/resources/duplicate_uid_inventory.csv");
-		new CSVLibraryItemSupplier(csv);
+		CSVLibraryItemSupplier csvLibraryItemSupplier = new CSVLibraryItemSupplier(csv);
+		Assert.assertEquals(1, csvLibraryItemSupplier.getCurrentInventory().size());
 	}
 }

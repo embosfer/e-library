@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -17,6 +19,7 @@ import java.util.stream.Stream;
 
 import com.embosfer.library.model.LibraryItem;
 import com.embosfer.library.model.LibraryItem.LibraryItemType;
+import com.embosfer.library.model.LibraryItemCopy;
 import com.embosfer.library.model.User;
 
 /**
@@ -31,7 +34,7 @@ public class CSVLibraryItemSupplier implements LibraryItemSupplier {
 	// https://commons.apache.org/proper/commons-csv/user-guide.html#Example:_Parsing_an_Excel_CSV_File
 	private static final String COMMA = ",";
 
-	private final ConcurrentMap<Long, LibraryItem> itemsByUniqueID = new ConcurrentHashMap<>();
+	private final ConcurrentMap<LibraryItem, Set<LibraryItemCopy>> copiesByItem = new ConcurrentHashMap<>();
 	private final List<LibraryItem> inventoryList;
 
 	/**
@@ -54,10 +57,11 @@ public class CSVLibraryItemSupplier implements LibraryItemSupplier {
 	private Function<String, LibraryItem> toLibraryItem = line -> {
 		String[] fields = line.split(COMMA);
 		int i = 0;
-		LibraryItem libraryItem = new LibraryItem(Long.valueOf(fields[i++]), Long.valueOf(fields[i++]),
-				LibraryItemType.valueOf(fields[i++]), fields[i++]);
-		LibraryItem replaced = itemsByUniqueID.put(libraryItem.getUniqueID(), libraryItem);
-		assert (replaced == null) : "Duplicate found while loading => " + libraryItem;
+		Long uniqueID = Long.valueOf(fields[i++]);
+		LibraryItem libraryItem = new LibraryItem(Long.valueOf(fields[i++]), LibraryItemType.valueOf(fields[i++]),
+				fields[i++]);
+		LibraryItemCopy itemCopy = new LibraryItemCopy(uniqueID, libraryItem);
+		copiesByItem.computeIfAbsent(libraryItem, k -> new HashSet<>()).add(itemCopy);
 		return libraryItem;
 	};
 
