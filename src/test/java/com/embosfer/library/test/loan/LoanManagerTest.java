@@ -5,11 +5,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.embosfer.library.loan.LoanManager;
+import com.embosfer.library.loan.store.LoanTransactionStore;
 import com.embosfer.library.model.LibraryItem;
 import com.embosfer.library.model.LibraryItem.LibraryItemType;
 import com.embosfer.library.model.LibraryItemCopy;
@@ -18,25 +21,40 @@ import com.embosfer.library.model.User;
 @RunWith(JUnit4.class)
 public class LoanManagerTest {
 
-	@Test(expected = NullPointerException.class)
-	public void borrowNullBook() {
-		LoanManager loanManager = new LoanManager();
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
 
+	@Test
+	public void nullLoanTransactionStore() {
+		thrown.expect(NullPointerException.class);
+		thrown.expectMessage("LoanTransactionStore cannot be null");
+		new LoanManager(null);
+	}
+
+	@Test
+	public void borrowNullBook() {
+		LoanManager loanManager = new LoanManager(dummyLoanTransactionalStore);
+
+		thrown.expect(NullPointerException.class);
+		thrown.expectMessage("LibraryItemCopy cannot be null");
 		loanManager.borrow(null, new User(1, "Bob"), 7);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void borrowNullUser() {
-		LoanManager loanManager = new LoanManager();
+		LoanManager loanManager = new LoanManager(dummyLoanTransactionalStore);
 
 		LibraryItem item = new LibraryItem(1, LibraryItemType.Book, "Java Concurrency In Practice");
 		LibraryItemCopy uniqueCopy = new LibraryItemCopy(1, item);
+
+		thrown.expect(NullPointerException.class);
+		thrown.expectMessage("User cannot be null");
 		loanManager.borrow(uniqueCopy, null, 7);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void borrowInvalidDays() {
-		LoanManager loanManager = new LoanManager();
+		LoanManager loanManager = new LoanManager(dummyLoanTransactionalStore);
 
 		LibraryItem item = new LibraryItem(1, LibraryItemType.Book, "Java Concurrency In Practice");
 		LibraryItemCopy uniqueCopy = new LibraryItemCopy(1, item);
@@ -45,7 +63,7 @@ public class LoanManagerTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void borrowInvalidDays_2() {
-		LoanManager loanManager = new LoanManager();
+		LoanManager loanManager = new LoanManager(dummyLoanTransactionalStore);
 
 		LibraryItem item = new LibraryItem(1, LibraryItemType.Book, "Java Concurrency In Practice");
 		LibraryItemCopy uniqueCopy = new LibraryItemCopy(1, item);
@@ -54,7 +72,7 @@ public class LoanManagerTest {
 
 	@Test
 	public void borrowSingleThreaded_BorrowSuccess() {
-		LoanManager loanManager = new LoanManager();
+		LoanManager loanManager = new LoanManager(dummyLoanTransactionalStore);
 
 		LibraryItem item = new LibraryItem(1, LibraryItemType.Book, "Java Concurrency In Practice");
 		LibraryItemCopy uniqueCopy = new LibraryItemCopy(1, item);
@@ -64,7 +82,7 @@ public class LoanManagerTest {
 
 	@Test
 	public void borrowSingleThreaded_BorrowFail() {
-		LoanManager loanManager = new LoanManager();
+		LoanManager loanManager = new LoanManager(dummyLoanTransactionalStore);
 
 		LibraryItem item = new LibraryItem(1, LibraryItemType.Book, "Java Concurrency In Practice");
 		LibraryItemCopy uniqueCopy = new LibraryItemCopy(1, item);
@@ -83,7 +101,7 @@ public class LoanManagerTest {
 
 	@Test
 	public void borrowMultiThreaded_JustOneUserSucceds() throws InterruptedException {
-		LoanManager loanManager = new LoanManager();
+		LoanManager loanManager = new LoanManager(dummyLoanTransactionalStore);
 		LibraryItem itemToLoan = new LibraryItem(1, LibraryItemType.Book, "Java Concurrency In Practice");
 		LibraryItemCopy uniqueCopy = new LibraryItemCopy(1, itemToLoan);
 
@@ -113,4 +131,6 @@ public class LoanManagerTest {
 		endGate.await(); // wait for all threads to finish
 		Assert.assertEquals(1, numTimesLoaned.get());
 	}
+
+	private LoanTransactionStore dummyLoanTransactionalStore = System.out::println;
 }
