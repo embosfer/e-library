@@ -4,9 +4,10 @@ import java.util.Objects;
 
 /**
  * Represents the loanable items in the library. Holds the shared details of
- * each copy.
+ * each {@link LibraryItemCopy}.
  * 
  * @author embosfer
+ * @see LibraryItemCopy
  *
  */
 public class LibraryItem {
