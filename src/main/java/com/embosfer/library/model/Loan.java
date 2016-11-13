@@ -15,21 +15,21 @@ public class Loan {
 	private final User user;
 	private final long uniqueLibraryItemID;
 	private final LocalDateTime loanStart;
-	private final LocalDateTime loanEnd;
+	private final LocalDateTime loanDueEnd;
 
 	/**
 	 * @param user
 	 *            The {@link User}. Must not be null
 	 * @param uniqueLibraryItemID
 	 * @param loanStart
-	 * @param loanEnd
+	 * @param loanDueEnd
 	 */
-	public Loan(User user, long uniqueLibraryItemID, LocalDateTime loanStart, LocalDateTime loanEnd) {
+	public Loan(User user, long uniqueLibraryItemID, LocalDateTime loanStart, LocalDateTime loanDueEnd) {
 		Objects.requireNonNull(user);
 		this.user = user;
 		this.uniqueLibraryItemID = uniqueLibraryItemID;
 		this.loanStart = loanStart;
-		this.loanEnd = loanEnd;
+		this.loanDueEnd = loanDueEnd;
 	}
 
 	// TODO complete javadoc
@@ -38,7 +38,7 @@ public class Loan {
 	@Override
 	public String toString() {
 		return new StringBuilder().append("User ").append(user).append(" loaned out ").append(uniqueLibraryItemID)
-				.append(" on ").append(loanStart).append(" and has to return it on ").append(loanEnd).toString();
+				.append(" on ").append(loanStart).append(" and has to return it on ").append(loanDueEnd).toString();
 	}
 
 	public static void main(String[] args) {
