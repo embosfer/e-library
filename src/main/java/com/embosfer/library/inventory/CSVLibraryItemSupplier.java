@@ -66,12 +66,6 @@ public class CSVLibraryItemSupplier implements LibraryItemSupplier {
 	};
 
 	@Override
-	public Collection<LibraryItem> getItemsByUser(User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Collection<LibraryItem> getCurrentInventory() {
 		return inventoryList;
 	}
@@ -83,7 +77,7 @@ public class CSVLibraryItemSupplier implements LibraryItemSupplier {
 	}
 
 	@Override
-	public Collection<LibraryItem> getBorrowedItemsFor() {
+	public Collection<LibraryItem> getBorrowedItemsFor(User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

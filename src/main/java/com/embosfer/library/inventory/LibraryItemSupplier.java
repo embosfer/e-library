@@ -32,11 +32,9 @@ public interface LibraryItemSupplier {
 	
 	// TODO maybe List instead of Collection
 
-	public Collection<LibraryItem> getItemsByUser(User user);
-
 	public Collection<LibraryItem> getCurrentInventory();
 
 	public Collection<LibraryItem> getOverdueItems();
 
-	public Collection<LibraryItem> getBorrowedItemsFor();
+	public Collection<LibraryItem> getBorrowedItemsFor(User user);
 }
