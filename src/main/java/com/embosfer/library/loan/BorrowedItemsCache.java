@@ -1,5 +1,6 @@
 package com.embosfer.library.loan;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -50,8 +51,18 @@ public class BorrowedItemsCache {
 	 *            The {@link User} trying to borrow
 	 */
 	public void remove(LibraryItemCopy item, User user) {
-		borrowedItems.remove(item.getUniqueID());
-		borrowedItemsPerUser.get(user).remove(item);
+		LibraryItemCopy removed = borrowedItems.remove(item.getUniqueID());
+		if (removed != null) {
+			borrowedItemsPerUser.get(user).remove(item);
+		}
+	}
+
+	public Collection<LibraryItemCopy> getOverdueItems() {
+		return borrowedItems.values();
+	}
+	
+	public Set<LibraryItemCopy> getBorrowedItemsFor(User user) {
+		return borrowedItemsPerUser.get(user);
 	}
 
 }

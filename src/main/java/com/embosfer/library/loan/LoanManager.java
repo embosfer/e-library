@@ -1,6 +1,7 @@
 package com.embosfer.library.loan;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.Executors;
@@ -69,13 +70,11 @@ public class LoanManager implements LoanController {
 
 	@Override
 	public Collection<LibraryItemCopy> getOverdueItems() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ArrayList<>(borrowedItemsCache.getOverdueItems());
 	}
 
 	@Override
 	public Collection<LibraryItemCopy> getBorrowedItemsFor(User user) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ArrayList<>(borrowedItemsCache.getBorrowedItemsFor(user));
 	}
 }
