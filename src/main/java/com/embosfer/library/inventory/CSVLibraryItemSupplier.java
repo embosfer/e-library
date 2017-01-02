@@ -20,7 +20,6 @@ import java.util.stream.Stream;
 import com.embosfer.library.model.LibraryItem;
 import com.embosfer.library.model.LibraryItem.LibraryItemType;
 import com.embosfer.library.model.LibraryItemCopy;
-import com.embosfer.library.model.User;
 
 /**
  * A supplier that retrieves the library items from a CSV
@@ -54,7 +53,8 @@ public class CSVLibraryItemSupplier implements LibraryItemSupplier {
 		}
 	}
 
-	// reads items from the CSV into a list and populates a cache of copies by item 
+	// reads items from the CSV into a list and populates a cache of copies by
+	// item
 	private Function<String, LibraryItem> toLibraryItem = line -> {
 		String[] fields = line.split(COMMA);
 		int i = 0;
@@ -70,18 +70,6 @@ public class CSVLibraryItemSupplier implements LibraryItemSupplier {
 	@Override
 	public Collection<LibraryItem> getCurrentInventory() {
 		return inventoryList;
-	}
-
-	@Override
-	public Collection<LibraryItemCopy> getOverdueItems() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Collection<LibraryItemCopy> getBorrowedItemsFor(User user) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

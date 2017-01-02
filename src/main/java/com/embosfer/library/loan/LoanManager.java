@@ -1,6 +1,7 @@
 package com.embosfer.library.loan;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -64,5 +65,17 @@ public class LoanManager implements LoanController {
 	private void check(LibraryItemCopy item, User user) {
 		Objects.requireNonNull(item, "LibraryItemCopy cannot be null");
 		Objects.requireNonNull(user, "User cannot be null");
+	}
+
+	@Override
+	public Collection<LibraryItemCopy> getOverdueItems() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<LibraryItemCopy> getBorrowedItemsFor(User user) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
