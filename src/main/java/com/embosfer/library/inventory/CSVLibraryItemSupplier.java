@@ -54,6 +54,7 @@ public class CSVLibraryItemSupplier implements LibraryItemSupplier {
 		}
 	}
 
+	// reads items from the CSV into a list and populates a cache of copies by item 
 	private Function<String, LibraryItem> toLibraryItem = line -> {
 		String[] fields = line.split(COMMA);
 		int i = 0;
@@ -61,6 +62,7 @@ public class CSVLibraryItemSupplier implements LibraryItemSupplier {
 		LibraryItem libraryItem = new LibraryItem(Long.valueOf(fields[i++]), LibraryItemType.valueOf(fields[i++]),
 				fields[i++]);
 		LibraryItemCopy itemCopy = new LibraryItemCopy(uniqueID, libraryItem);
+		// take advantage to keep it in a map
 		copiesByItem.computeIfAbsent(libraryItem, k -> new HashSet<>()).add(itemCopy);
 		return libraryItem;
 	};
@@ -71,13 +73,13 @@ public class CSVLibraryItemSupplier implements LibraryItemSupplier {
 	}
 
 	@Override
-	public Collection<LibraryItem> getOverdueItems() {
+	public Collection<LibraryItemCopy> getOverdueItems() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Collection<LibraryItem> getBorrowedItemsFor(User user) {
+	public Collection<LibraryItemCopy> getBorrowedItemsFor(User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}

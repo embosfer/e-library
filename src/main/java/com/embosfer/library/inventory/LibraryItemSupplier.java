@@ -3,6 +3,7 @@ package com.embosfer.library.inventory;
 import java.util.Collection;
 
 import com.embosfer.library.model.LibraryItem;
+import com.embosfer.library.model.LibraryItemCopy;
 import com.embosfer.library.model.User;
 
 /**
@@ -34,7 +35,7 @@ public interface LibraryItemSupplier {
 
 	public Collection<LibraryItem> getCurrentInventory();
 
-	public Collection<LibraryItem> getOverdueItems();
+	public Collection<LibraryItemCopy> getOverdueItems();
 
-	public Collection<LibraryItem> getBorrowedItemsFor(User user);
+	public Collection<LibraryItemCopy> getBorrowedItemsFor(User user);
 }
